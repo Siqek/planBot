@@ -5,6 +5,7 @@ module.exports = class NtpTime
     constructor() 
     {
         this.clientNTP = new NTP('time.google.com', 123, { timeout: 5000 });
+        this.update();
     }
 
     async update()
@@ -14,7 +15,7 @@ module.exports = class NtpTime
             .then(res => {
                 this.time = new Date(res.time).toLocaleString("en-US", { timeZone: "Poland" });
             })
-            .catch(console.log);
+            .catch();
     }
 
     getTime()

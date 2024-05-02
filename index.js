@@ -6,7 +6,6 @@ require('dotenv').config();
 
 const NtpTime = require('./NtpTime');
 const ntpTime = new NtpTime;
-ntpTime.update(); //Initialize time
 
 setInterval(() => { ntpTime.update() }, 20 * 1000); //Update time after each 20 seconds
 
@@ -32,12 +31,25 @@ client.once(Events.ClientReady, readyClient => {
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
+		console.error(`Nie znaleziono odpowiadającej komendy: ${interaction.commandName}.`);
+		return;
+	}
+	
+	if (!interaction.isChatInputCommand()) 
+	{
+		if (interaction.isAutocomplete())
+		{
+			try {
+				await command.autocomplete(interaction);
+			} catch (err) {
+				console.log(err)
+				return;
+			}
+		}
+
 		return;
 	}
 

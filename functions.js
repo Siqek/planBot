@@ -1,5 +1,5 @@
 module.exports = {
-    prepareUrl: function (url, pathName,  params) 
+    prepareUrl: function (url, pathName,  params = {}) 
     {
         let _url = new URL(`${url}${pathName}`);
     
