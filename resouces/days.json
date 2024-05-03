@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Poniedziałek",
+        "value": 1
+    },
+    {
+        "name": "Wtorek",
+        "value": 2
+    },
+    {
+        "name": "Środa",
+        "value": 3
+    },
+    {
+        "name": "Czwartek",
+        "value": 4
+    },
+    {
+        "name": "Piątek",
+        "value": 5
+    }
+]
