@@ -1,46 +1,90 @@
 [
 	{	
         "name": "1. 8:00-8:45", 
-        "value": 1
+        "value": 1,
+        "startH": 8,
+        "startM": 0,
+        "endH": 8,
+        "endM": 45
     },
 	{	
         "name": "2. 8:55-9:40", 
-        "value": 2
+        "value": 2,
+        "startH": 8,
+        "startM": 55,
+        "endH": 9,
+        "endM": 40
     },
 	{	
         "name": "3. 9:50-10:35", 
-        "value": 3
+        "value": 3,
+        "startH": 9,
+        "startM": 50,
+        "endH": 10,
+        "endM": 35
     },
 	{	
         "name": "4. 10:45-11:30",	
-        "value": 4
+        "value": 4,
+        "startH": 10,
+        "startM": 45,
+        "endH": 11,
+        "endM": 30
     },
 	{	
         "name": "5. 11:40-12:25",	
-        "value": 5
+        "value": 5,
+        "startH": 11,
+        "startM": 40,
+        "endH": 12,
+        "endM": 25
     },
 	{	
         "name": "6. 12:30-13:15",	
-        "value": 6
+        "value": 6,
+        "startH": 12,
+        "startM": 30,
+        "endH": 13,
+        "endM": 15
     },
 	{	
         "name": "7. 13:45-14:30",	
-        "value": 7
+        "value": 7,
+        "startH": 13,
+        "startM": 45,
+        "endH": 14,
+        "endM": 30
     },
 	{	
         "name": "8. 14:35-15:20",	
-        "value": 8
+        "value": 8,
+        "startH": 14,
+        "startM": 35,
+        "endH": 15,
+        "endM": 20
     },
 	{	
         "name": "9. 15:30-16:15",	
-        "value": 9
+        "value": 9,
+        "startH": 15,
+        "startM": 30,
+        "endH": 16,
+        "endM": 15
     },
 	{	
         "name": "10. 16:25-17:10", 
-        "value": 10
+        "value": 10,
+        "startH": 16,
+        "startM": 25,
+        "endH": 17,
+        "endM": 10
     },
 	{	
         "name": "11. 17:20-18:05", 
-        "value": 11
+        "value": 11,
+        "startH": 17,
+        "startM": 20,
+        "endH": 18,
+        "endM": 5
     }
 ]

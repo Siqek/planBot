@@ -2,6 +2,9 @@ const NTP = require('ntp-time').Client;
 
 module.exports = class NtpTime
 {
+    time = null;
+    clientNTP = null;
+
     constructor() 
     {
         this.clientNTP = new NTP('time.google.com', 123, { timeout: 5000 });
@@ -25,16 +28,16 @@ module.exports = class NtpTime
 
     minutes()
     {
-        return (new Date(this.time).getMinutes());
+        return (new Date(this.getTime()).getMinutes());
     }
 
     hours()
     {
-        return (new Date(this.time).getHours());
+        return (new Date(this.getTime()).getHours());
     }
 
     day()
     {
-        return (new Date(this.time).getDay());
+        return (new Date(this.getTime()).getDay());
     }
 }

@@ -5,7 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
 const NtpTime = require('./NtpTime');
-const ntpTime = new NtpTime;
+const ntpTime = new NtpTime();
 
 setInterval(() => { ntpTime.update() }, 20 * 1000); //Update time after each 20 seconds
 

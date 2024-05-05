@@ -4,22 +4,22 @@ require("dotenv").config();
 
 const __tools = require('../functions');
 
-const timeTable = require('../resouces/timeTable.json');
-const days = require('../resouces/days.json');
+const timeTable 	= require('../resouces/timeTable.json');
+const days 			= require('../resouces/days.json');
 
-var choises = [];
+var teachersNames = [];
 
-(async function fetchChoises () 
+(async function fetchTeachersNames () 
 {
 	let data = await __tools.fetchData(__tools.prepareUrl(process.env.url, '/nauczyciele'));
 
 	for (i in data) 
 	{
-		choises.push({ name: `${data[i]} (${i})`, value: i})
+		teachersNames.push({ name: data[i], value: i})
 	};
 	
-	choises.filter(choise => !choise.name.includes('vacat', 'vakat'));
-	choises.sort((a, b) => {
+	teachersNames.filter(choise => !choise.name.includes('vacat', 'vakat'));
+	teachersNames.sort((a, b) => {
 		if (a.name.slice(2) > b.name.slice(2)) return 1;
 		if (a.name.slice(2) < b.name.slice(2)) return -1;
 		return 0;
@@ -40,7 +40,7 @@ module.exports = {
 			option.setName('godzina')
 				.setDescription('x')
 				.addChoices(
-					...timeTable
+					...timeTable.map(lesson =>({ 'name': lesson.name, 'value': lesson.value }))
 				)
 		)
 		.addNumberOption(option =>
@@ -54,23 +54,46 @@ module.exports = {
 	{
 		const value = interaction.options.getFocused().trim().toLowerCase();
 
-		const filtered = choises
+		const filtered = teachersNames
 			.filter(
-				choise => (choise.name.toLowerCase().includes(value))
+				teacherName => (
+					teacherName.name.toLowerCase().includes(value)
+					|| teacherName.value.toLowerCase().includes(value)
+				)
 			)
 			.slice(0, 25);
 
 		if (!interaction) return;
 
-		await interaction.respond(filtered);
+		await interaction.respond(filtered.map((teacherName) => (
+			{
+				name: `${teacherName.name} (${teacherName.value})`,
+				value: teacherName.value
+			}
+		)));
 	},
-	async execute (interaction, time) 
+	async execute (interaction, ntpTime) 
 	{
-		const nauczyciel = interaction.options.getString('nauczyciel');
-		const czas = interaction.options.getNumber('godzina');
-		const dzien = interaction.options.getNumber('dzień');
+		const options = {
+			nauczyciel		: interaction.options.getString('nauczyciel'),
+			godzina			: interaction.options.getNumber('godzina'),
+			dzien			: interaction.options.getNumber('dzień')
+		}
+		const nauczyciel 	= options.nauczyciel;
+		const godzina 		= (options.godzina === null ? __tools.whichLesson(ntpTime) : options.godzina);
+		const dzien 		= (options.dzien === null ? ntpTime.day() : options.day);
 
-		console.log(dzien, czas)
+		if (!teachersNames.some(teacherName => 
+			(
+				teacherName.name.includes(nauczyciel) 
+				|| teacherName.value.includes(nauczyciel)
+			)
+		))
+		{
+			//the teacher doesn't exist or wrong name
+			await interaction.reply({ content: `INFO O BŁĘDNIE NAPISANYM NAZWISKU NAUCZYCIELA`, ephemeral: true });
+			return;
+		}
 
 		const data = await __tools.fetchData(
 			__tools.prepareUrl(
@@ -78,12 +101,19 @@ module.exports = {
 				'/', 
 				{
 					'nauczyciel': `${nauczyciel}`,
-					'czas'		: `${czas}`,
+					'czas'		: `${godzina}`,
 					'day'		: `${dzien}`
 				}
 			)
 		);
-		console.log(data);
-		await interaction.reply(`nauczyciel: ${nauczyciel}\nczas: ${time.getTime()}`);
+
+		if (data.length)
+		{
+			await interaction.reply(`nauczyciel: ${nauczyciel}\nczas: ${ntpTime.getTime()}`);
+		}
+		else
+		{
+			await interaction.reply({ content: 'brak dopasowań', ephemeral: true });
+		}
 	},
 };
