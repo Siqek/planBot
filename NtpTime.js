@@ -18,7 +18,7 @@ module.exports = class NtpTime
             .then(res => {
                 this.time = new Date(res.time).toLocaleString("en-US", { timeZone: "Poland" });
             })
-            .catch();
+            .catch(console.log);
     }
 
     getTime()

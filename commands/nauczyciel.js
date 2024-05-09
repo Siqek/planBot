@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 require("dotenv").config();
 
 const __tools = require('../functions');
 
-const timeTable 	= require('../resouces/timeTable.json');
-const days 			= require('../resouces/days.json');
+const timeTable 	= require('../resources/timeTable.json');
+const days 			= require('../resources/days.json');
 
 var teachersNames = [];
 
@@ -90,7 +91,7 @@ module.exports = {
 			)
 		))
 		{
-			//the teacher doesn't exist or wrong name
+			//the teacher doesn't exist or name is wrong
 			await interaction.reply({ content: `INFO O BŁĘDNIE NAPISANYM NAZWISKU NAUCZYCIELA`, ephemeral: true });
 			return;
 		}
@@ -107,9 +108,34 @@ module.exports = {
 			)
 		);
 
-		if (data.length)
+		if (data.length)// && data !== 'Break')
 		{
-			await interaction.reply(`nauczyciel: ${nauczyciel}\nczas: ${ntpTime.getTime()}`);
+			const embed = new EmbedBuilder()
+				.setColor(0x0032fa)
+				// .setTitle('PB')
+				// .setURL('http://zs1mm.home.pl/plan/')
+				// .setAuthor({ name: 'Some name', /*iconURL: 'http://www.zs1mm.home.pl/strona/wp-content/uploads/2022/03/cropped-korona.png',*/ url: 'https://discord.js.org' })
+				// .setDescription('Some description here')
+				// .setThumbnail('http://www.zs1mm.home.pl/strona/wp-content/uploads/2022/03/cropped-korona.png')
+				.addFields(
+					{ name: 'Nauczyciel:', value: 'Some value here', inline: true },
+					{ name: '\u200B', value: '\u200B', inline: true }, //gap between 2 fields
+					{ name: 'Sala lekcyjna:', value: 'Some value here', inline: true },
+					{ name: '\u200B', value: '\u200B', inline: false }, //new line
+					{ name: 'Klasa:', value: 'Some value here', inline: true },
+					{ name: '\u200B', value: '\u200B', inline: true },
+					{ name: 'Przedmiot:', value: 'Some value here', inline: true },
+				)
+				.setTimestamp();
+				// .setFooter(
+				// 	{
+				// 		text: "PlanBot",
+				// 		iconURL: "http://www.zs1mm.home.pl/strona/wp-content/uploads/2022/03/cropped-korona.png"
+				// 	}
+				// );
+			
+			await interaction.reply({ embeds: [embed], ephemeral: false });
+			//await interaction.reply(`nauczyciel: ${nauczyciel}\nczas: ${ntpTime.getTime()}\n${JSON.stringify(data)}`);
 		}
 		else
 		{
