@@ -19,7 +19,7 @@ module.exports = {
         
         return data;
     },
-    whichLesson: function (ntpTime)
+    getLessonNumber: function (ntpTime)
     {
         const hours = ntpTime.hours() + (ntpTime.minutes() / 60);
 

@@ -26,10 +26,10 @@ const rest = new REST().setToken(process.env.token);
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		//remove all global commands
-		await rest.put(
-			Routes.applicationCommands(process.env.clientId),
-			{ body: [] },
-		);
+		//await rest.put(
+		//	Routes.applicationCommands(process.env.clientId),
+		//	{ body: [] },
+		//);
 
 		//push new global commands
 		const data = await rest.put(
