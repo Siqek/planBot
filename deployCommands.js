@@ -31,7 +31,7 @@ const rest = new REST().setToken(process.env.token);
 		//	{ body: [] },
 		//);
 
-		//push new global commands
+		//push all (new) global commands
 		const data = await rest.put(
             Routes.applicationCommands(process.env.clientId),
             { body: commands },

@@ -46,7 +46,7 @@ module.exports = {
 		)
 		.addNumberOption(option =>
 			option.setName('dzien')
-				.setDescription('x') //check it later ('\u200B' as param)
+				.setDescription('x')
 				.addChoices(
 					...days
 				)
@@ -112,8 +112,13 @@ module.exports = {
 			const embedTitle = days[dzien - 1].name;
 			const embedDescription = (function makeDescription ()
 			{
+				function formatMinutes (minutes)
+				{
+					return `${'00'.slice(`${minutes}`.length)}${minutes}`;
+				}
+
 				let lesson = timeTable[godzina - 1];
-				return `${lesson.startH}:${lesson.startM}-${lesson.endH}:${lesson.endM}`;
+				return `${lesson.startH}:${formatMinutes(lesson.startM)}-${lesson.endH}:${formatMinutes(lesson.endM)}`;
 			})();
 
 			const embed = new EmbedBuilder()
