@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
+const Embeds = require('../embeds/Embeds');
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('test')
@@ -8,7 +10,6 @@ module.exports = {
          	option.setName('option')
             	.setDescription('option test')),
 	async execute(interaction, _) {
-        console.log(interaction.options);
-		await interaction.reply('testowa');
+		await interaction.reply({ embeds: [ ...Object.values(Embeds) ]});
 	},
 };

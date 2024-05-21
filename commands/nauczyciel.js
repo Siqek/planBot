@@ -4,6 +4,7 @@ const { EmbedBuilder } = require('discord.js');
 require("dotenv").config();
 
 const __tools = require('../functions');
+const embedCreator = require('../embeds/EmbedCreator');
 
 const timeTable 	= require('../resources/timeTable.json');
 const days 			= require('../resources/days.json');
@@ -16,7 +17,7 @@ var teachersNames = [];
 
 	for (i in data) 
 	{
-		teachersNames.push({ name: data[i], value: i})
+		teachersNames.push({ name: data[i], value: i});
 	};
 	
 	teachersNames.filter(choise => !choise.name.includes('vacat', 'vakat'));
@@ -112,19 +113,15 @@ module.exports = {
 			const embedTitle = days[dzien - 1].name;
 			const embedDescription = (function makeDescription ()
 			{
-				function formatMinutes (minutes)
-				{
-					return `${'00'.slice(`${minutes}`.length)}${minutes}`;
-				}
+				function formatMinutes (minutes) { return `${'00'.slice(`${minutes}`.length)}${minutes}`; }
 
 				let lesson = timeTable[godzina - 1];
 				return `${lesson.startH}:${formatMinutes(lesson.startM)}-${lesson.endH}:${formatMinutes(lesson.endM)}`;
 			})();
 
-			const embed = new EmbedBuilder()
+			const embed = embedCreator.createEmbed(embedCreator.embedsTypes.messange.id)
 				.setTitle(embedTitle)
 				.setDescription(embedDescription)
-				.setColor(0x0032fa)
 				.addFields(
 					{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
 					{ name: '\u200B', value: '\u200B', inline: true }, //gap between 2 fields in a row
@@ -133,13 +130,6 @@ module.exports = {
 					{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
 					{ name: '\u200B', value: '\u200B', inline: true },
 					{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
-				)
-				.setTimestamp()
-				.setFooter(
-					{
-						text: "PlanBot",
-						iconURL: "http://www.zs1mm.home.pl/strona/wp-content/uploads/2022/03/cropped-korona.png"
-					}
 				);
 			
 			await interaction.reply({ embeds: [embed], ephemeral: false });
