@@ -2,9 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
-require('dotenv').config();
+require('dotenv').config({ path: __dirname+'/../.env' });
 
-const NtpTime = require('./NtpTime');
+const NtpTime = require('./tools/NtpTime');
 const ntpTime = new NtpTime();
 
 setInterval(() => { ntpTime.update() }, 20 * 1000); //Update time after each 20 seconds

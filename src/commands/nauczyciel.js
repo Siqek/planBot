@@ -1,9 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
 
-require("dotenv").config();
-
-const __tools = require('../functions');
+const __tools = require('../tools/functions');
 const embedCreator = require('../embeds/EmbedCreator');
 
 const timeTable 	= require('../resources/timeTable.json');

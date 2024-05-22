@@ -23,7 +23,7 @@ module.exports = {
     {
         const hours = ntpTime.hours() + (ntpTime.minutes() / 60);
 
-        const timeTable = require('./resources/timeTable.json');
+        const timeTable = require('../resources/timeTable.json');
 
         if (hours < 8) return 1; //return as it would be the first lesson
 

@@ -1,19 +1,16 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
 
-require("dotenv").config();
-
-const __tools = require('../functions');
+const __tools = require('../tools/functions');
 
 const timeTable 	= require('../resources/timeTable.json');
 const days 			= require('../resources/days.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('klasa')
+		.setName('sala')
 		.setDescription('x')
       	.addStringOption(option =>
-         	option.setName('klasa')
+         	option.setName('sala')
             	.setDescription('x')
             	.setRequired(true)
 		)
