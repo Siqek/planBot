@@ -1,10 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const __tools = require('../tools/functions');
-const embedCreator = require('../embeds/EmbedCreator');
+const { embedsTypes, createEmbed, embedFields } = require('../embeds/EmbedCreator');
+const Embeds = require('../embeds/Embeds');
 
-const timeTable 	= require('../resources/timeTable.json');
-const days 			= require('../resources/days.json');
+const timeTable     = require('../resources/timeTable.json');
+const days          = require('../resources/days.json');
+const Time          = require('../tools/Time');
 
 var teachersNames = [];
 
@@ -17,7 +19,7 @@ var teachersNames = [];
 		teachersNames.push({ name: data[i], value: i});
 	};
 	
-	teachersNames.filter(choise => !choise.name.includes('vacat', 'vakat'));
+	teachersNames.filter(choise => !choise.name.includes('vacat') && !choise.name.includes('vakat'));
 	teachersNames.sort((a, b) => {
 		if (a.name.slice(2) > b.name.slice(2)) return 1;
 		if (a.name.slice(2) < b.name.slice(2)) return -1;
@@ -53,8 +55,7 @@ module.exports = {
 	{
 		const value = interaction.options.getFocused().trim().toLowerCase();
 
-		const filtered = teachersNames
-			.filter(
+		const filtered = teachersNames.filter(
 				teacherName => (
 					teacherName.name.toLowerCase().includes(value)
 					|| teacherName.value.toLowerCase().includes(value)
@@ -71,27 +72,20 @@ module.exports = {
 			}
 		)));
 	},
-	async execute (interaction, ntpTime) 
+	async execute (interaction, time) 
 	{
-		const options = {
-			nauczyciel		: interaction.options.getString('nauczyciel'),
-			godzina			: interaction.options.getNumber('godzina'),
-			dzien			: interaction.options.getNumber('dzien')
-		}
-		const nauczyciel 	= options.nauczyciel;
-		const godzina 		= (options.godzina === null ? __tools.getLessonNumber(ntpTime) : options.godzina);
-		const dzien 		= (options.dzien === null ? ntpTime.day() : options.dzien);
+		const nauczyciel 	= interaction.options.getString('nauczyciel'); //cannot be null
+		const godzina 		= interaction.options.getNumber('godzina') ?? __tools.getLessonNumber(time);
+		const dzien 		= interaction.options.getNumber('dzien') ?? time.day();
 
 		//check if the teacher even exist
-		if (!teachersNames.some(teacherName => 
-			(
+		if (!teachersNames.some(teacherName => (
 				teacherName.name.includes(nauczyciel) 
 				|| teacherName.value.includes(nauczyciel)
-			)
-		))
+			)))
 		{
 			//the teacher doesn't exist or the name is wrong
-			await interaction.reply({ content: `INFO O BŁĘDNIE NAPISANYM NAZWISKU NAUCZYCIELA`, ephemeral: true });
+			await interaction.reply({ embeds: [Embeds.wrongTeacherName], ephemeral: true });
 			return;
 		}
 
@@ -107,32 +101,44 @@ module.exports = {
 		
 		if (data.length && data !== 'Break')
 		{
+			// TODO (siqek)
+			//
+			// sprawdzanie poprawności otrzymanego obiektu do fukncji
+
+			// TODO (siqek)
+			//
+			// optymalizacja wykorzystywanie otrzymanego obiektu z API
+			// nie korzystanie z `data[0].` tylko czegoś bradziej przyjemnego w korzystaniu
+
 			const embedTitle = days[dzien - 1].name;
 			const embedDescription = (function makeDescription ()
 			{
-				function formatMinutes (minutes) { return `${'00'.slice(`${minutes}`.length)}${minutes}`; }
-
 				let lesson = timeTable[godzina - 1];
-				return `${lesson.startH}:${formatMinutes(lesson.startM)}-${lesson.endH}:${formatMinutes(lesson.endM)}`;
+				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
 			})();
 
-			const embed = embedCreator.createEmbed(embedCreator.embedsTypes.messange.id)
-				.setTitle(embedTitle)
-				.setDescription(embedDescription)
-				.addFields(
-					{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
-					{ name: '\u200B', value: '\u200B', inline: true }, //gap between 2 fields in a row
-					{ name: 'Sala lekcyjna:', value: `${data[0].sala}`, inline: true },
-					{ name: '\u200B', value: '\u200B', inline: false }, //new line, gap between 2 columns
-					{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
-					{ name: '\u200B', value: '\u200B', inline: true },
-					{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
-				);
+			const embed = createEmbed(embedsTypes.message.id)
+			.setTitle(embedTitle)
+			.setDescription(embedDescription)
+			.addFields(
+				{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
+				embedFields.gap,
+				{ name: 'Sala lekcyjna:', value: `${data[0].sala}`, inline: true },
+				embedFields.newLine,
+				{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
+				embedFields.gap,
+				{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
+			);
 			
 			await interaction.reply({ embeds: [embed], ephemeral: false });
 		}
 		else
 		{
+			// TODO (siqek)
+			//
+			// wykorzystanie gotowego embedu z pliku 
+			// często powtarzana wiadomość
+
 			await interaction.reply({ content: 'brak dopasowań', ephemeral: true });
 		}
 	},

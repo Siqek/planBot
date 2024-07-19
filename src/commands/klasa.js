@@ -28,8 +28,10 @@ module.exports = {
 					...days
 				)
 		),
-    async execute (interaction, ntpTime)
+    async execute (interaction, time)
     {
-
+		// TODO (siqek)
+		//
+		// funkcja
     },
 }

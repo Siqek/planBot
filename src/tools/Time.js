@@ -1,6 +1,6 @@
 const NTP = require('ntp-time').Client;
 
-module.exports = class NtpTime
+module.exports = class Time
 {
     time = null;
     clientNTP = null;
@@ -39,5 +39,10 @@ module.exports = class NtpTime
     day()
     {
         return (new Date(this.getTime()).getDay());
+    }
+
+    static formatMinutes (minutes) 
+    {
+        return `${'00'.slice(`${minutes}`.length)}${minutes}`;
     }
 }

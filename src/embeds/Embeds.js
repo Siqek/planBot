@@ -1,12 +1,20 @@
-const embedCreator = require('./EmbedCreator');
+const { embedsTypes, createEmbed } = require('./EmbedCreator');
+
+// TODO (siqek)
+//
+// przyda się więcej gotowych embedsów
 
 module.exports =
 {
-    incorrectParams: embedCreator.createEmbed(embedCreator.embedsTypes.warning.id)
-        .setTitle("Dane nie zostały podane poprawnie."),
-    error: embedCreator.createEmbed(embedCreator.embedsTypes.error.id)
-        .setTitle("Napotkano błąd podczas wykonywania zapytania."),
-    test0: embedCreator.createEmbed(embedCreator.embedsTypes.messange.id),
-    test1: embedCreator.createEmbed(embedCreator.embedsTypes.warning.id),
-    test2: embedCreator.createEmbed(embedCreator.embedsTypes.error.id)
+    incorrectParams: 
+        createEmbed(embedsTypes.warning.id)
+        .setTitle("Wprowadzono niepoprawne dane"),
+
+    error: 
+        createEmbed(embedsTypes.error.id)
+        .setTitle("Napotkano błąd podczas wykonywania zapytania"),
+
+    wrongTeacherName: 
+        createEmbed(embedsTypes.warning.id)
+        .setTitle("Wprowadzono niepoprawne nazwisko nauczyciela"),
 }

@@ -4,10 +4,10 @@ const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
 require('dotenv').config({ path: __dirname+'/../.env' });
 
-const NtpTime = require('./tools/NtpTime');
-const ntpTime = new NtpTime();
+const Time = require('./tools/Time');
+const time = new Time();
 
-setInterval(() => { ntpTime.update() }, 20 * 1000); //Update time after each 20 seconds
+setInterval(() => { time.update() }, 20 * 1000); //Update the time after each 20 seconds
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -54,7 +54,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		await command.execute(interaction, ntpTime);
+		await command.execute(interaction, time);
 	} catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {

@@ -1,7 +1,7 @@
-// const NtpTime = require('./NtpTime');
+// const Time = require('./Time');
 
 module.exports = {
-    prepareUrl: function (url, pathName,  params = {}) 
+    prepareUrl: function (url, pathName, params = {}) 
     {
         let _url = new URL(`${url}${pathName}`);
     
@@ -19,9 +19,9 @@ module.exports = {
         
         return data;
     },
-    getLessonNumber: function (ntpTime)
+    getLessonNumber: function (time)
     {
-        const hours = ntpTime.hours() + (ntpTime.minutes() / 60);
+        const hours = time.hours() + (time.minutes() / 60);
 
         const timeTable = require('../resources/timeTable.json');
 

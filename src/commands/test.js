@@ -1,3 +1,7 @@
+// TODO (siqek)
+//
+// do usunięcia po zakończeniu testowania
+
 const { SlashCommandBuilder } = require('discord.js');
 
 const Embeds = require('../embeds/Embeds');
@@ -10,6 +14,6 @@ module.exports = {
          	option.setName('option')
             	.setDescription('option test')),
 	async execute(interaction, _) {
-		await interaction.reply({ embeds: [ ...Object.values(Embeds) ]});
+		await interaction.reply({ embeds: Object.values(Embeds), ephemeral: true});
 	},
 };
