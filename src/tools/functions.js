@@ -21,20 +21,24 @@ module.exports = {
     },
     getLessonNumber: function (time)
     {
-        const hours = time.hours() + (time.minutes() / 60);
+        console.log("used getLessonNumber!!!");
+
+        const currentTimeInMinutes = (time.hours() * 60) + time.minutes();
 
         const timeTable = require('../resources/timeTable.json');
 
-        if (hours < 8) return 1; //return as it would be the first lesson
+        if (currentTimeInMinutes < 8) return 1; //return as it would be the first lesson
 
 
         for (const [index, lesson] of timeTable.entries()) {
-            let start = lesson.startH + (lesson.startM / 60);
-            let end = lesson.endH + (lesson.endM / 60);
+            let lessonStartInMinutes = (lesson.startH * 60) + lesson.startM;
+            let lessonEndInMinutes = (lesson.endH * 60) + lesson.endM;
 
-            if (hours < start) return index + 1; //if there is a break, return the index of the next lesson
+            if (currentTimeInMinutes < lessonStartInMinutes)
+                return index + 1; //if there is a break, return the index of the next lesson
 
-            if (hours >= start && hours < end) return index + 1;  //return the number of the current lesson
+            if (currentTimeInMinutes >= lessonStartInMinutes && currentTimeInMinutes < lessonEndInMinutes)
+                return index + 1;  //return the number of the current lesson
         }
 
         return -1; //if there are no more lessons, return -1

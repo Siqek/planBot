@@ -12,19 +12,27 @@ var teachersNames = [];
 
 (async function fetchTeachersNames () 
 {
-	let data = await __tools.fetchData(__tools.prepareUrl(process.env.url, '/nauczyciele'));
+	console.log("Started downloading teacher names");
 
+	// download data
+	const data = await __tools.fetchData(__tools.prepareUrl(process.env.url, '/nauczyciele'));
+
+	// create an array from downloaded data
 	for (i in data) 
 	{
 		teachersNames.push({ name: data[i], value: i});
 	};
 	
+	// remove useless elements from the array
 	teachersNames.filter(choise => !choise.name.includes('vacat') && !choise.name.includes('vakat'));
+	// sort teachers names by last name
 	teachersNames.sort((a, b) => {
 		if (a.name.slice(2) > b.name.slice(2)) return 1;
 		if (a.name.slice(2) < b.name.slice(2)) return -1;
 		return 0;
 	});
+
+	console.log("Successfully downloaded teacher names");
 })();
 
 module.exports = {
@@ -51,6 +59,13 @@ module.exports = {
 					...days
 				)
 		),
+		// .addBooleanOption(option =>
+		// 	option.setName('widocznosc')
+		// 		.setDescription('x')
+		// 		.addChoices(
+
+		// 		)
+		//),
 	async autocomplete (interaction)
 	{
 		const value = interaction.options.getFocused().trim().toLowerCase();
@@ -74,9 +89,10 @@ module.exports = {
 	},
 	async execute (interaction, time) 
 	{
+		//
 		const nauczyciel 	= interaction.options.getString('nauczyciel'); //cannot be null
-		const godzina 		= interaction.options.getNumber('godzina') ?? __tools.getLessonNumber(time);
-		const dzien 		= interaction.options.getNumber('dzien') ?? time.day();
+		const godzina 		= interaction.options.getNumber('godzina')    ?? time.getLessonNumber();
+		const dzien 		= interaction.options.getNumber('dzien')      ?? time.day();
 
 		//check if the teacher even exist
 		if (!teachersNames.some(teacherName => (

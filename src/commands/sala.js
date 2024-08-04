@@ -30,14 +30,9 @@ module.exports = {
 		),
     async execute (interaction, time)
     {
-		const options = {
-			sala            : interaction.options.getString('sala'),
-			godzina         : interaction.options.getNumber('godzina'),
-			dzien           : interaction.options.getNumber('dzien')
-		}
-		const sala          = options.sala;
-		const godzina       = (options.godzina === null ? __tools.getLessonNumber(time) : options.godzina);
-		const dzien         = (options.dzien === null ? time.day() : options.dzien);
+		const sala          = interaction.options.getString('sala');
+		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
+		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
 
 		const url = __tools.prepareUrl(
 			process.env.url, '/', 

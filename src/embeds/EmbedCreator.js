@@ -1,5 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 
+// TODO (siqek)
+//
+// huh??
+// zbedna komplikacja kodu wymagajaca dodatkowej uwagi piszacego nowe polecenia
+// po co funkcja tworzaca ma wymagac id embeda i znaldowac go w objekcie
+// latwiej przekazac sam kolor odopwiednio oznaczony do zastosowania
+// bedzie szybciej i latwiej
+
 module.exports.embedsTypes = Object.freeze(
     {
         message: 
@@ -39,7 +47,7 @@ module.exports.createEmbed = function (embedTypeId) //embedTypeId must be value 
 
 module.exports.embedFields = Object.freeze(
     {
-        gap: { name: '\u200B', value: '\u200B', inline: true }, //gap works if 2 fields between gap has property `inline` equals true
-        newLine: { name: '\u200B', value: '\u200B', inline: false }
+        gap     : { name: '\u200B', value: '\u200B', inline: true }, //gap works if 2 fields between gap has property `inline` equals true
+        newLine : { name: '\u200B', value: '\u200B', inline: false }
     }
 );
