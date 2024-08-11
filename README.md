@@ -1,7 +1,5 @@
-# discordBot
+# PlanBot
 
 ---
  
 [TODO list](/TODO)
-
-[test](/TEST.md)

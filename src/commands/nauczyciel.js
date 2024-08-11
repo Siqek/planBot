@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const __tools = require('../tools/functions');
+const tools = require('../tools/functions');
 const { embedColors, createEmbed, embedFields } = require('../embeds/EmbedCreator');
 const Embeds = require('../embeds/Embeds');
 
@@ -15,7 +15,7 @@ var teacherNames = [];
 	console.log("Started downloading teacher names");
 
 	// download data
-	const data = await __tools.fetchData(__tools.prepareUrl(process.env.url, '/nauczyciele'));
+	const data = await tools.fetchData(tools.prepareUrl(process.env.url, '/nauczyciele'));
 
 	// create an array from downloaded data
 	for (i in data) 
@@ -114,7 +114,7 @@ module.exports = {
 			return;
 		}
 
-		const url = __tools.prepareUrl(
+		const url = tools.prepareUrl(
 			process.env.url, '/', 
 			{
 				'nauczyciel': `${nauczyciel}`,
@@ -122,7 +122,7 @@ module.exports = {
 				'day'		: `${dzien}`
 			}
 		);
-		const data = await __tools.fetchData(url);
+		const data = await tools.fetchData(url);
 		
 		console.log(data, godzina, dzien);
 

@@ -2,20 +2,11 @@
 - dodanie opcji widoczności polecenia
     polecenie widoczna dla wszystkich / tylko dla używającego polecenie
 
-- informacja o rozpoczęciu pobierania imion nauczycieli i o zakonczeniu pobierania
-    bot wyrzuci błąd gdy się poda polecenie przed pobraniem tablicy z nauczycielami
-    (warto będzie to zabezpieczyć komunikatem)
-
-- TODO związany z getLessonNumber (Time.js)
-
 [mniej ważne w tym momencie :D]
 - dokumentacja
 
 [końcowa faza projektu / wydanie stabilnej wersji bota]
 - serwer aby umożliwić dodanie bota na swój serwer / znaleźć sposób aby dodawać bota poprzez link (bez search params)
 - tutorial dodawania bota na własny serwer
-
-[mało ważne]
-- wyrzucić 'test.js' z '.gitignore' po skończeniu testowania funkcji
 
 pozostałe TODO'sy znajdują się w poszczególnych plikach
