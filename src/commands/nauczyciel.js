@@ -1,16 +1,16 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const __tools = require('../tools/functions');
-const { embedsTypes, createEmbed, embedFields } = require('../embeds/EmbedCreator');
+const { embedColors, createEmbed, embedFields } = require('../embeds/EmbedCreator');
 const Embeds = require('../embeds/Embeds');
 
 const timeTable     = require('../resources/timeTable.json');
 const days          = require('../resources/days.json');
 const Time          = require('../tools/Time');
 
-var teachersNames = [];
+var teacherNames = [];
 
-(async function fetchTeachersNames () 
+(async function fetchTeacherNames () 
 {
 	console.log("Started downloading teacher names");
 
@@ -20,13 +20,13 @@ var teachersNames = [];
 	// create an array from downloaded data
 	for (i in data) 
 	{
-		teachersNames.push({ name: data[i], value: i});
+		teacherNames.push({ name: data[i], value: i});
 	};
 	
 	// remove useless elements from the array
-	teachersNames.filter(choise => !choise.name.includes('vacat') && !choise.name.includes('vakat'));
+	teacherNames.filter(choise => !choise.name.includes('vacat') && !choise.name.includes('vakat'));
 	// sort teachers names by last name
-	teachersNames.sort((a, b) => {
+	teacherNames.sort((a, b) => {
 		if (a.name.slice(2) > b.name.slice(2)) return 1;
 		if (a.name.slice(2) < b.name.slice(2)) return -1;
 		return 0;
@@ -70,7 +70,7 @@ module.exports = {
 	{
 		const value = interaction.options.getFocused().trim().toLowerCase();
 
-		const filtered = teachersNames.filter(
+		const filtered = teacherNames.filter(
 				teacherName => (
 					teacherName.name.toLowerCase().includes(value)
 					|| teacherName.value.toLowerCase().includes(value)
@@ -94,10 +94,19 @@ module.exports = {
 		const godzina 		= interaction.options.getNumber('godzina')    ?? time.getLessonNumber();
 		const dzien 		= interaction.options.getNumber('dzien')      ?? time.day();
 
+		// TODO (siqek)
+		//
+		// poprawic
+		// ten lowerCase srednio dziala
+		// API bierze pod uwage wielkosc liter
+		// jezeli tutaj znajdzie dzieki lowerCase
+		// potem nie znajdzie API, więc i tak wyrzuci brak danych
+
 		//check if the teacher even exist
-		if (!teachersNames.some(teacherName => (
-				teacherName.name.includes(nauczyciel) 
-				|| teacherName.value.includes(nauczyciel)
+		const lowerCaseNauczyciel = nauczyciel.toLowerCase();
+		if (!teacherNames.some(teacherName => (
+				teacherName.name.toLowerCase().includes(lowerCaseNauczyciel) 
+				|| teacherName.value.toLowerCase().includes(lowerCaseNauczyciel)
 			)))
 		{
 			//the teacher doesn't exist or the name is wrong
@@ -115,6 +124,13 @@ module.exports = {
 		);
 		const data = await __tools.fetchData(url);
 		
+		console.log(data, godzina, dzien);
+
+		// TODO (siqek)
+		//
+		// wyrzucic oddzielnie sprawdzanie data == Break itd.
+		// wyrzucac oddzielne komunikaty do data == Break i data.lenght == 0
+
 		if (data.length && data !== 'Break')
 		{
 			// TODO (siqek)
@@ -133,7 +149,7 @@ module.exports = {
 				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
 			})();
 
-			const embed = createEmbed(embedsTypes.message.id)
+			const embed = createEmbed(embedColors.message)
 			.setTitle(embedTitle)
 			.setDescription(embedDescription)
 			.addFields(

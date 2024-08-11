@@ -1,4 +1,4 @@
-const { embedsTypes, createEmbed } = require('./EmbedCreator');
+const { embedColors, createEmbed } = require('./EmbedCreator');
 
 // TODO (siqek)
 //
@@ -7,14 +7,14 @@ const { embedsTypes, createEmbed } = require('./EmbedCreator');
 module.exports =
 {
     incorrectParams: 
-        createEmbed(embedsTypes.warning.id)
+        createEmbed(embedColors.warning)
         .setTitle("Wprowadzono niepoprawne dane"),
 
     error: 
-        createEmbed(embedsTypes.error.id)
+        createEmbed(embedColors.error)
         .setTitle("Napotkano błąd podczas wykonywania zapytania"),
 
     wrongTeacherName: 
-        createEmbed(embedsTypes.warning.id)
+        createEmbed(embedColors.warning)
         .setTitle("Wprowadzono niepoprawne nazwisko nauczyciela"),
 }

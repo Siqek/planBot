@@ -1,39 +1,17 @@
 const { EmbedBuilder } = require('discord.js');
 
-// TODO (siqek)
-//
-// huh??
-// zbedna komplikacja kodu wymagajaca dodatkowej uwagi piszacego nowe polecenia
-// po co funkcja tworzaca ma wymagac id embeda i znaldowac go w objekcie
-// latwiej przekazac sam kolor odopwiednio oznaczony do zastosowania
-// bedzie szybciej i latwiej
-
-module.exports.embedsTypes = Object.freeze(
+module.exports.embedColors = Object.freeze(
     {
-        message: 
-        {
-            id   : Symbol('message'),
-            color: 0x0032fa,
-        },
-        warning: 
-        {
-            id   : Symbol('warning'),
-            color: 0xffe530,
-        },
-        error: 
-        {
-            id   : Symbol('error'),
-            color: 0xff0f0f,
-        },
+        message : 0x0032fa,
+        warning : 0xffe530,
+        error   : 0xff0f0f,
     }
 );
 
-module.exports.createEmbed = function (embedTypeId) //embedTypeId must be value of id from embeds types array
+module.exports.createEmbed = function (embedColor = this.embedColor.message) // embed template
 {
-    let embedType = Object.values(this.embedsTypes).find(embed => embed.id === embedTypeId);
-
     let embed = new EmbedBuilder()
-        .setColor(embedType.color)
+        .setColor(embedColor)
         .setTimestamp()
         .setFooter(
             {

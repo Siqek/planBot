@@ -51,14 +51,6 @@ module.exports = class Time
     {
         // TODO (siqek)
         //
-        // sprawdzic czy ta funcka dziala :D
-
-        // TODO (siqek)
-        //
-        // wykorzystywac metode tej klasy zamiast funkcji wyrzuconej do pliku functions.js
-
-        // TODO (siqek)
-        //
         // zmienić sposob zwracania danych na [numer lekcji; czy trwa przerwa]
         // lub to uproscic do jednego warunku
         // wystarczy porownac aktualny czas z czasem konca lekcji
@@ -72,8 +64,8 @@ module.exports = class Time
             let lessonStartInMinutes = (lesson.startH * 60) + lesson.startM;
             let lessonEndInMinutes = (lesson.endH * 60) + lesson.endM;
 
-            if (currentTimeInMinutes < lessonStartInMinutes)
-                return index + 1; //if there is a break, return the index of the next lesson
+            //if (currentTimeInMinutes < lessonStartInMinutes)
+            //    return index + 1; //if there is a break, return the index of the next lesson
 
             if (currentTimeInMinutes < lessonEndInMinutes)
                 return index + 1;  //return the number of the current lesson
