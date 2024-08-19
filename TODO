@@ -1,6 +1,7 @@
 [bierzące potrzeby]
 - dodanie opcji widoczności polecenia
     polecenie widoczna dla wszystkich / tylko dla używającego polecenie
+- TODO'sy w plikach
 
 [mniej ważne w tym momencie :D]
 - dokumentacja
@@ -9,4 +10,8 @@
 - serwer aby umożliwić dodanie bota na swój serwer / znaleźć sposób aby dodawać bota poprzez link (bez search params)
 - tutorial dodawania bota na własny serwer
 
-pozostałe TODO'sy znajdują się w poszczególnych plikach
+[rozmyślenia]
+ - rozbić bota na kilka serwisów?
+ (bot -> odpowiadanie na podstawie API_1,
+ API_1 -> przygotowywanie danych z API_2,
+ API_1 / API_3 -> zapis poleceń do bazy danych)

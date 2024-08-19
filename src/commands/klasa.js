@@ -33,10 +33,20 @@ module.exports = {
 		),
     async execute (interaction, time)
     {
-		console.log('/klasa');
-		const klasa         = interaction.options.getString('klasa'); //cannot be null
+		const klasa         = interaction.options.getString('klasa').toUpperCase(); //cannot be null
 		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
 		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
+
+		if (
+			godzina < 0   // there are no more lessons
+			|| dzien > 5  // there is a weekend (5 => friday)
+		)
+		{
+			let embed = createEmbed(embedColors.warning).setTitle("Nie ma lekcji");
+
+			await interaction.reply({ embeds: [embed], ephemeral: true });
+			return;
+		};
 
 		const url = tools.prepareUrl(
 			process.env.url, '/', 
@@ -46,6 +56,7 @@ module.exports = {
 				'day'        : `${dzien}`
 			}
 		);
+
 		const data = await tools.fetchData(url);
 
 		console.log(data, godzina, dzien);
@@ -59,23 +70,34 @@ module.exports = {
 				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
 			})();
 
-			const embed = createEmbed(embedColors.message)
-			.setTitle(embedTitle)
-			.setDescription(embedDescription)
-			.addFields(
-				{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
-				embedFields.gap,
-				{ name: 'Sala lekcyjna:', value: `${data[0].sala}`, inline: true },
-				embedFields.newLine,
-				{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
-				embedFields.gap,
-				{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
-			);
-			
-			await interaction.reply({ embeds: [embed], ephemeral: false });	
+			let embeds = [];
+
+			data.forEach(e =>
+			{
+				const embed = createEmbed(embedColors.message)
+				.setTitle(embedTitle)
+				.setDescription(embedDescription)
+				.addFields(
+					{ name: 'Nauczyciel:', value: `${e.nauczyciel}`, inline: true },
+					embedFields.gap,
+					{ name: 'Sala lekcyjna:', value: `${e.sala}`, inline: true },
+					embedFields.newLine,
+					{ name: `Klas${(e.klasa.length > 1 ? 'y' : 'a')}:`, value: `${e.klasa.join(', ')}`, inline: true },
+					embedFields.gap,
+					{ name: 'Przedmiot:', value: `${e.lekcja}`, inline: true },
+				);
+
+				embeds.push(embed);
+			});
+
+			await interaction.reply({ embeds: embeds, ephemeral: false });	
+		}
+		else
+		{
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
 		};
 		// TODO (siqek)
 		//
-		// pagination system || kilka embedow
+		// kilka embedow => pagination system 
     },
 }

@@ -17,4 +17,8 @@ module.exports =
     wrongTeacherName: 
         createEmbed(embedColors.warning)
         .setTitle("Wprowadzono niepoprawne nazwisko nauczyciela"),
+
+    noDataToDisplay:
+        createEmbed(embedColors.warning)
+        .setTitle("Brak danych do wyświetlenia"),
 }

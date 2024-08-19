@@ -94,13 +94,16 @@ module.exports = {
 		const godzina 		= interaction.options.getNumber('godzina')    ?? time.getLessonNumber();
 		const dzien 		= interaction.options.getNumber('dzien')      ?? time.day();
 
-		// TODO (siqek)
-		//
-		// poprawic
-		// ten lowerCase srednio dziala
-		// API bierze pod uwage wielkosc liter
-		// jezeli tutaj znajdzie dzieki lowerCase
-		// potem nie znajdzie API, więc i tak wyrzuci brak danych
+		if (
+			godzina < 0   // there are no more lessons
+			|| dzien > 5  // there is a weekend (5 => friday)
+		)
+		{
+			let embed = createEmbed(embedColors.warning).setTitle("Nie ma lekcji");
+
+			await interaction.reply({ embeds: [embed], ephemeral: true });
+			return;
+		};
 
 		//check if the teacher even exist
 		const lowerCaseNauczyciel = nauczyciel.toLowerCase();
@@ -113,6 +116,14 @@ module.exports = {
 			await interaction.reply({ embeds: [Embeds.wrongTeacherName], ephemeral: true });
 			return;
 		}
+		
+		// TODO (siqek)
+		//
+		// poprawic
+		// ten lowerCase srednio dziala
+		// API bierze pod uwage wielkosc liter
+		// jezeli tutaj znajdzie dzieki lowerCase
+		// potem nie znajdzie API, więc i tak wyrzuci brak danych
 
 		const url = tools.prepareUrl(
 			process.env.url, '/', 
@@ -166,12 +177,7 @@ module.exports = {
 		}
 		else
 		{
-			// TODO (siqek)
-			//
-			// wykorzystanie gotowego embedu z pliku 
-			// często powtarzana wiadomość
-
-			await interaction.reply({ content: 'brak dopasowań', ephemeral: true });
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
 		}
 	},
 };

@@ -36,6 +36,17 @@ module.exports = {
 		const sala          = interaction.options.getString('sala');
 		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
 		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
+		
+		if (
+			godzina < 0   // there are no more lessons
+			|| dzien > 5  // there is a weekend (5 => friday)
+		)
+		{
+			let embed = createEmbed(embedColors.warning).setTitle("Nie ma lekcji");
+
+			await interaction.reply({ embeds: [embed], ephemeral: true });
+			return;
+		};
 
 		const url = tools.prepareUrl(
 			process.env.url, '/', 
@@ -46,6 +57,17 @@ module.exports = {
 			}
 		);
 		const data = await tools.fetchData(url);
+
+		// TODO (siqek)
+		//
+		// [Zwraca "Break", jeśli obecny czas (brak ustawionego parametru day) jest po za godzinami lekcyjnymi (przed, po lub pomiędzy (przerwy)]
+		// 
+		// zabezpieczenie polecenia i uproszczenie warunku
+
+		// TODO (siqek)
+		//
+		// embedTitle i embedDescription do zapisania gdzies
+		// powtarza sie w poleceniach
 
 		if (data.length && data !== 'Break')
 		{
@@ -70,6 +92,10 @@ module.exports = {
 			);
 			
 			await interaction.reply({ embeds: [embed], ephemeral: false });	
+		}
+		else
+		{
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
 		};
     },
 }
