@@ -1,9 +1,5 @@
 const { embedColors, createEmbed } = require('./EmbedCreator');
 
-// TODO (siqek)
-//
-// przyda się więcej gotowych embedsów
-
 module.exports =
 {
     incorrectParams: 

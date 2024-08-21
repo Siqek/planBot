@@ -18,9 +18,5 @@ module.exports = {
         const data = await response.json();
         
         return data;
-    },
-    getLessonNumber: function (time)
-    {
-        console.log("used getLessonNumber!!!");
     }
 }

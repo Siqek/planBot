@@ -11,6 +11,8 @@
 - tutorial dodawania bota na własny serwer
 
 [rozmyślenia]
+ - baza danych z planem lekcji
+ - baza danych do statystyk
  - rozbić bota na kilka serwisów?
  (bot -> odpowiadanie na podstawie API_1,
  API_1 -> przygotowywanie danych z API_2,

@@ -42,19 +42,8 @@ module.exports = class Time
         return (new Date(this.getTime()).getDay());
     }
 
-    static formatMinutes (minutes) 
-    {
-        return `${'00'.slice(`${minutes}`.length)}${minutes}`;
-    }
-
     getLessonNumber ()
     {
-        // TODO (siqek)
-        //
-        // zmienić sposob zwracania danych na [numer lekcji; czy trwa przerwa]
-        // lub to uproscic do jednego warunku
-        // wystarczy porownac aktualny czas z czasem konca lekcji
-
         const currentTimeInMinutes = (this.hours() * 60) + this.minutes();
 
         if (currentTimeInMinutes < 8) return 1; //return as it would be the first lesson
@@ -72,5 +61,17 @@ module.exports = class Time
         }
 
         return -1; //if there are no more lessons, return -1
+    }
+    
+    static formatMinutes (minutes) 
+    {
+        return `${'00'.slice(`${minutes}`.length)}${minutes}`;
+    }
+
+    static formatLessonTime (lessonIndex)
+    {
+        const time_table = require('../resources/timeTable.json')
+        let lesson = time_table[lessonIndex];
+        return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
     }
 }

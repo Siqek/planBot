@@ -56,46 +56,38 @@ module.exports = {
 				'day'       : `${dzien}`
 			}
 		);
-		const data = await tools.fetchData(url);
+		const res = await tools.fetchData(url);
 
-		// TODO (siqek)
-		//
-		// [Zwraca "Break", jeśli obecny czas (brak ustawionego parametru day) jest po za godzinami lekcyjnymi (przed, po lub pomiędzy (przerwy)]
-		// 
-		// zabezpieczenie polecenia i uproszczenie warunku
-
-		// TODO (siqek)
-		//
-		// embedTitle i embedDescription do zapisania gdzies
-		// powtarza sie w poleceniach
-
-		if (data.length && data !== 'Break')
+		if (res == 'Break')
 		{
-			const embedTitle = days[dzien - 1].name;
-			const embedDescription = (function makeDescription ()
-			{
-				let lesson = timeTable[godzina - 1];
-				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
-			})();
-
-			const embed = createEmbed(embedColors.message)
-			.setTitle(embedTitle)
-			.setDescription(embedDescription)
-			.addFields(
-				{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
-				embedFields.gap,
-				{ name: 'Sala lekcyjna:', value: `${data[0].sala}`, inline: true },
-				embedFields.newLine,
-				{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
-				embedFields.gap,
-				{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
-			);
-			
-			await interaction.reply({ embeds: [embed], ephemeral: false });	
+			console.log("UNEXPECTED RESPONSE: 'BREAK'!", `URL: ${url}`);
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true });
+			return;
 		}
-		else
+
+		if (!res.length)
 		{
+			// there is no lesson (free period)
 			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
-		};
+			return;
+		}
+
+		const data = res[0];
+
+		const embed = createEmbed(embedColors.message)
+		.setTitle(days[dzien - 1].name)
+		.setDescription(Time.formatLessonTime(godzina - 1))
+		.addFields(
+			{ name: 'Nauczyciel:', value: `${data.nauczyciel}`, inline: true },
+			embedFields.gap,
+			{ name: 'Sala lekcyjna:', value: `${data.sala}`, inline: true },
+			embedFields.newLine,
+			{ name: 'Klasy:', value: `${data.klasa.join(', ')}`, inline: true },
+			embedFields.gap,
+			{ name: 'Przedmiot:', value: `${data.lekcja}`, inline: true },
+		);
+		
+		await interaction.reply({ embeds: [embed], ephemeral: false });	
+
     },
 }

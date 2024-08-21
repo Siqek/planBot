@@ -58,14 +58,21 @@ module.exports = {
 				.addChoices(
 					...days
 				)
+		)
+		.addStringOption(option =>
+			option.setName('widocznosc')
+				.setDescription('x')
+				.addChoices(
+					{
+						name: "publiczna (wszyscy)",
+						value: "false"
+					},
+					{
+						name: "prywatna (ty)",
+						value: "true"
+					}
+				)
 		),
-		// .addBooleanOption(option =>
-		// 	option.setName('widocznosc')
-		// 		.setDescription('x')
-		// 		.addChoices(
-
-		// 		)
-		//),
 	async autocomplete (interaction)
 	{
 		const value = interaction.options.getFocused().trim().toLowerCase();
@@ -89,10 +96,10 @@ module.exports = {
 	},
 	async execute (interaction, time) 
 	{
-		//
 		const nauczyciel 	= interaction.options.getString('nauczyciel'); //cannot be null
 		const godzina 		= interaction.options.getNumber('godzina')    ?? time.getLessonNumber();
 		const dzien 		= interaction.options.getNumber('dzien')      ?? time.day();
+		const visibility    = interaction.options.getString('widocznosc') == "true"; // converts a string into a boolean value
 
 		if (
 			godzina < 0   // there are no more lessons
@@ -116,14 +123,6 @@ module.exports = {
 			await interaction.reply({ embeds: [Embeds.wrongTeacherName], ephemeral: true });
 			return;
 		}
-		
-		// TODO (siqek)
-		//
-		// poprawic
-		// ten lowerCase srednio dziala
-		// API bierze pod uwage wielkosc liter
-		// jezeli tutaj znajdzie dzieki lowerCase
-		// potem nie znajdzie API, więc i tak wyrzuci brak danych
 
 		const url = tools.prepareUrl(
 			process.env.url, '/', 
@@ -133,51 +132,37 @@ module.exports = {
 				'day'		: `${dzien}`
 			}
 		);
-		const data = await tools.fetchData(url);
-		
-		console.log(data, godzina, dzien);
+		const res = await tools.fetchData(url);
 
-		// TODO (siqek)
-		//
-		// wyrzucic oddzielnie sprawdzanie data == Break itd.
-		// wyrzucac oddzielne komunikaty do data == Break i data.lenght == 0
-
-		if (data.length && data !== 'Break')
+		if (res == 'Break')
 		{
-			// TODO (siqek)
-			//
-			// sprawdzanie poprawności otrzymanego obiektu do fukncji
-
-			// TODO (siqek)
-			//
-			// optymalizacja wykorzystywanie otrzymanego obiektu z API
-			// nie korzystanie z `data[0].` tylko czegoś bradziej przyjemnego w korzystaniu
-
-			const embedTitle = days[dzien - 1].name;
-			const embedDescription = (function makeDescription ()
-			{
-				let lesson = timeTable[godzina - 1];
-				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
-			})();
-
-			const embed = createEmbed(embedColors.message)
-			.setTitle(embedTitle)
-			.setDescription(embedDescription)
-			.addFields(
-				{ name: 'Nauczyciel:', value: `${data[0].nauczyciel}`, inline: true },
-				embedFields.gap,
-				{ name: 'Sala lekcyjna:', value: `${data[0].sala}`, inline: true },
-				embedFields.newLine,
-				{ name: `Klas${(data[0].klasa.length > 1 ? 'y' : 'a')}:`, value: `${data[0].klasa.join(', ')}`, inline: true },
-				embedFields.gap,
-				{ name: 'Przedmiot:', value: `${data[0].lekcja}`, inline: true },
-			);
-			
-			await interaction.reply({ embeds: [embed], ephemeral: false });
+			console.log("UNEXPECTED RESPONSE: 'BREAK'!", `URL: ${url}`);
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true });
+			return;
 		}
-		else
+
+		if (!res.length)
 		{
+			// there is no lesson (free period)
 			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
+			return;
 		}
+
+		const data = res[0];
+
+		const embed = createEmbed(embedColors.message)
+		.setTitle(days[dzien - 1].name)
+		.setDescription(Time.formatLessonTime(godzina - 1))
+		.addFields(
+			{ name: 'Nauczyciel:', value: `${data.nauczyciel}`, inline: true },
+			embedFields.gap,
+			{ name: 'Sala lekcyjna:', value: `${data.sala}`, inline: true },
+			embedFields.newLine,
+			{ name: 'Klasy:', value: `${data.klasa.join(', ')}`, inline: true },
+			embedFields.gap,
+			{ name: 'Przedmiot:', value: `${data.lekcja}`, inline: true },
+		);
+		
+		await interaction.reply({ embeds: [embed], ephemeral: visibility });
 	},
 };

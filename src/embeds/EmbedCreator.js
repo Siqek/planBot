@@ -3,8 +3,8 @@ const { EmbedBuilder } = require('discord.js');
 module.exports.embedColors = Object.freeze(
     {
         message : 0x0032fa,
-        warning : 0xffe530,
-        error   : 0xff0f0f,
+        warning : 0xffff00,
+        error   : 0xff0f0f, //f23f42,
     }
 );
 

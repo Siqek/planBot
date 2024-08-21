@@ -4,8 +4,8 @@ const tools = require('../tools/functions');
 const { embedColors, createEmbed, embedFields } = require('../embeds/EmbedCreator');
 const Embeds = require('../embeds/Embeds');
 
-const timeTable 	= require('../resources/timeTable.json');
-const days 			= require('../resources/days.json');
+const timeTable     = require('../resources/timeTable.json');
+const days          = require('../resources/days.json');
 const Time          = require('../tools/Time');
 
 module.exports = {
@@ -57,45 +57,44 @@ module.exports = {
 			}
 		);
 
-		const data = await tools.fetchData(url);
+		const res = await tools.fetchData(url);
 
-		console.log(data, godzina, dzien);
-
-		if (data.length && data !== 'Break')
+		if (res == 'Break')
 		{
-			const embedTitle = days[dzien - 1].name;
-			const embedDescription = (function makeDescription ()
-			{
-				let lesson = timeTable[godzina - 1];
-				return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
-			})();
-
-			let embeds = [];
-
-			data.forEach(e =>
-			{
-				const embed = createEmbed(embedColors.message)
-				.setTitle(embedTitle)
-				.setDescription(embedDescription)
-				.addFields(
-					{ name: 'Nauczyciel:', value: `${e.nauczyciel}`, inline: true },
-					embedFields.gap,
-					{ name: 'Sala lekcyjna:', value: `${e.sala}`, inline: true },
-					embedFields.newLine,
-					{ name: `Klas${(e.klasa.length > 1 ? 'y' : 'a')}:`, value: `${e.klasa.join(', ')}`, inline: true },
-					embedFields.gap,
-					{ name: 'Przedmiot:', value: `${e.lekcja}`, inline: true },
-				);
-
-				embeds.push(embed);
-			});
-
-			await interaction.reply({ embeds: embeds, ephemeral: false });	
+			console.log("UNEXPECTED RESPONSE: 'BREAK'!", `URL: ${url}`);
+			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true });
+			return;
 		}
-		else
+
+		if (!res.length)
 		{
+			// there is no lesson (free period)
 			await interaction.reply({ embeds: [Embeds.noDataToDisplay], ephemeral: true});
-		};
+			return;
+		}
+
+		let embeds = [];
+
+		res.forEach(data =>
+		{
+			const embed = createEmbed(embedColors.message)
+			.setTitle(days[dzien - 1].name)
+			.setDescription(Time.formatLessonTime(godzina - 1))
+			.addFields(
+				{ name: 'Nauczyciel:', value: `${data.nauczyciel}`, inline: true },
+				embedFields.gap,
+				{ name: 'Sala lekcyjna:', value: `${data.sala}`, inline: true },
+				embedFields.newLine,
+				{ name: 'Klasy', value: `${data.klasa.join(', ')}`, inline: true },
+				embedFields.gap,
+				{ name: 'Przedmiot:', value: `${data.lekcja}`, inline: true },
+			);
+
+			embeds.push(embed);
+		});
+
+		await interaction.reply({ embeds: embeds, ephemeral: false });
+
 		// TODO (siqek)
 		//
 		// kilka embedow => pagination system 
