@@ -2,9 +2,11 @@
 - dodanie opcji widoczności polecenia
     polecenie widoczna dla wszystkich / tylko dla używającego polecenie
 - TODO'sy w plikach
+- autocomplete w /sala i /klasa
 
 [mniej ważne w tym momencie :D]
 - dokumentacja
+- usuwanie poleceń z cmd (warto dodać poradnik do tego)
 
 [końcowa faza projektu / wydanie stabilnej wersji bota]
 - serwer aby umożliwić dodanie bota na swój serwer / znaleźć sposób aby dodawać bota poprzez link (bez search params)

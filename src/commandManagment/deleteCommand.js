@@ -1,21 +1,26 @@
-process.argv.slice(2).forEach((value, index) => 
-{
-    console.log(`${index}: ${value}`);
+const { REST, Routes } = require('discord.js');
+require('dotenv').config({ path: __dirname + '/../../.env' });
+
+const rest = new REST().setToken(process.env.token);
+
+console.log("WARNING! This will delete given commands.");
+console.log("Are you sure you want to continue? [y/N]");
+
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('data', (input) => {
+    input = input.trim().toLowerCase(); // normalize the input
+
+    if (input == 'y') // check to ensure you want to delete the commands
+    {
+        Object.values(process.argv.slice(2)).forEach(commandId => 
+        {
+            rest.delete(Routes.applicationCommand(process.env.clientId, commandId))
+                .then(() => console.log(`Successfully deleted application command (with ID: ${commandId})`))
+                .catch(console.error);
+        });
+    };
+    
+    process.stdin.pause(); // stop listening for input
+    //process.exit(); // exit and stop the program
 });
-
-// TODO (siqek)
-//
-// skończyć polecenie
-
-// const { REST, Routes } = require('discord.js');
-// const { clientId, guildId, token } = require('./config.json');
-
-// const rest = new REST().setToken(token);
-
-// rest.delete(Routes.applicationCommand(clientId, 'commandId'))
-// 	.then(() => console.log('Successfully deleted application command'))
-// 	.catch(console.error);
-
-// TODO (siqek)
-//
-// zabezpieczenie hasłem?? albo coś podobnego
