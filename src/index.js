@@ -4,6 +4,8 @@ const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
 require('dotenv').config({ path: __dirname+'/../.env' });
 
+const Embeds = require('./embeds/Embeds');
+
 const Time = require('./tools/Time');
 const time = new Time();
 
@@ -22,7 +24,7 @@ for (const file of commandFiles) {
 	if ('data' in command && 'execute' in command) {
 		client.commands.set(command.data.name, command);
 	} else {
-		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		console.log(`WARNING! The command at ${filePath} is missing a required "data" or "execute" property.`);
 	}
 }
 
@@ -58,9 +60,9 @@ client.on(Events.InteractionCreate, async interaction => {
 	} catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'Napotkano błąd podczas wykonywania polecenia.', ephemeral: true });
+			await interaction.followUp({ embeds: [Embeds.error], ephemeral: true });
 		} else {
-			await interaction.reply({ content: 'Napotkano błąd podczas wykonywania polecenia.', ephemeral: true });
+			await interaction.reply({ embeds: [Embeds.error], ephemeral: true });
 		}
 	}
 });

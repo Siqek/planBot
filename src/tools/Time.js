@@ -50,7 +50,7 @@ module.exports = class Time
 
 
         for (const [index, lesson] of this.timeTable.entries()) {
-            let lessonStartInMinutes = (lesson.startH * 60) + lesson.startM;
+            //let lessonStartInMinutes = (lesson.startH * 60) + lesson.startM;
             let lessonEndInMinutes = (lesson.endH * 60) + lesson.endM;
 
             //if (currentTimeInMinutes < lessonStartInMinutes)
@@ -73,5 +73,6 @@ module.exports = class Time
         const time_table = require('../resources/timeTable.json')
         let lesson = time_table[lessonIndex];
         return `${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
+        //return `${lessonIndex + 1}. ${lesson.startH}:${Time.formatMinutes(lesson.startM)}-${lesson.endH}:${Time.formatMinutes(lesson.endM)}`;
     }
 }

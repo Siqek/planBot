@@ -30,12 +30,27 @@ module.exports = {
 				.addChoices(
 					...days
 				)
+		)
+		.addStringOption(option =>
+			option.setName('widocznosc')
+				.setDescription('x')
+				.addChoices(
+					{
+						name: "wszyscy",
+						value: "false"
+					},
+					{
+						name: "tylko ty",
+						value: "true"
+					}
+				)
 		),
     async execute (interaction, time)
     {
 		const klasa         = interaction.options.getString('klasa').toUpperCase(); //cannot be null
 		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
 		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
+		const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
 
 		if (
 			godzina < 0   // there are no more lessons
@@ -93,7 +108,7 @@ module.exports = {
 			embeds.push(embed);
 		});
 
-		await interaction.reply({ embeds: embeds, ephemeral: false });
+		await interaction.reply({ embeds: embeds, ephemeral: visibility });
 
 		// TODO (siqek)
 		//

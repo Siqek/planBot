@@ -4,17 +4,17 @@ module.exports =
 {
     incorrectParams: 
         createEmbed(embedColors.warning)
-        .setTitle("Wprowadzono niepoprawne dane"),
+        .setTitle("Wprowadzono niepoprawne dane."),
 
     error: 
         createEmbed(embedColors.error)
-        .setTitle("Napotkano błąd podczas wykonywania zapytania"),
+        .setTitle("Napotkano błąd podczas wykonywania polecenia."),
 
     wrongTeacherName: 
         createEmbed(embedColors.warning)
-        .setTitle("Wprowadzono niepoprawne nazwisko nauczyciela"),
+        .setTitle("Wprowadzono niepoprawne nazwisko nauczyciela."),
 
     noDataToDisplay:
         createEmbed(embedColors.warning)
-        .setTitle("Brak danych do wyświetlenia"),
+        .setTitle("Brak danych do wyświetlenia."),
 }

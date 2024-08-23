@@ -64,11 +64,11 @@ module.exports = {
 				.setDescription('x')
 				.addChoices(
 					{
-						name: "publiczna (wszyscy)",
+						name: "wszyscy",
 						value: "false"
 					},
 					{
-						name: "prywatna (ty)",
+						name: "tylko ty",
 						value: "true"
 					}
 				)
@@ -97,9 +97,9 @@ module.exports = {
 	async execute (interaction, time) 
 	{
 		const nauczyciel 	= interaction.options.getString('nauczyciel'); //cannot be null
-		const godzina 		= interaction.options.getNumber('godzina')    ?? time.getLessonNumber();
-		const dzien 		= interaction.options.getNumber('dzien')      ?? time.day();
-		const visibility    = interaction.options.getString('widocznosc') == "true"; // converts a string into a boolean value
+		const godzina 		= interaction.options.getNumber('godzina')     ?? time.getLessonNumber();
+		const dzien 		= interaction.options.getNumber('dzien')       ?? time.day();
+		const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
 
 		if (
 			godzina < 0   // there are no more lessons

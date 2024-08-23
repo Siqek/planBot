@@ -1,16 +1,13 @@
 [bierzące potrzeby]
-- dodanie opcji widoczności polecenia
-    polecenie widoczna dla wszystkich / tylko dla używającego polecenie
 - TODO'sy w plikach
-- autocomplete w /sala i /klasa
+- autocomplete w /sala i /klasa (na wersje >= 1.0.0)
 
 [mniej ważne w tym momencie :D]
 - dokumentacja
-- usuwanie poleceń z cmd (warto dodać poradnik do tego)
+- poradnik do usuwania poleceń przez cmd
 
-[końcowa faza projektu / wydanie stabilnej wersji bota]
+[wydanie bota]
 - serwer aby umożliwić dodanie bota na swój serwer / znaleźć sposób aby dodawać bota poprzez link (bez search params)
-- tutorial dodawania bota na własny serwer
 
 [rozmyślenia]
  - baza danych z planem lekcji
