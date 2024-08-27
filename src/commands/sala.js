@@ -11,46 +11,46 @@ const Time          = require('../tools/Time');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('sala')
-		.setDescription('x')
+		.setDescription('Wyświetla dane lekcji prowadzonej w podanej sali lekcyjnej.')
       	.addStringOption(option =>
          	option.setName('sala')
-            	.setDescription('x')
+            	.setDescription('Numer sali')
             	.setRequired(true)
 		)
 		.addNumberOption(option =>
 			option.setName('godzina')
-				.setDescription('x')
+				.setDescription('Numer lekcji')
 				.addChoices(
 					...timeTable.map(lesson =>({ 'name': lesson.name, 'value': lesson.value }))
 				)
 		)
 		.addNumberOption(option =>
 			option.setName('dzien')
-				.setDescription('x')
+				.setDescription('Dzień tygodnia')
 				.addChoices(
 					...days
 				)
-		)
-		.addStringOption(option =>
-			option.setName('widocznosc')
-				.setDescription('x')
-				.addChoices(
-					{
-						name: "wszyscy",
-						value: "false"
-					},
-					{
-						name: "tylko ty",
-						value: "true"
-					}
-				)
+		// )
+		// .addStringOption(option =>
+		// 	option.setName('widocznosc')
+		// 		.setDescription('Kto może zobaczyć wiadomość')
+		// 		.addChoices(
+		// 			{
+		// 				name: "wszyscy",
+		// 				value: "false"
+		// 			},
+		// 			{
+		// 				name: "tylko ty",
+		// 				value: "true"
+		// 			}
+		// 		)
 		),
     async execute (interaction, time)
     {
 		const sala          = interaction.options.getString('sala');
 		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
 		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
-		const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
+		// const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
 
 		if (
 			godzina < 0   // there are no more lessons
@@ -102,7 +102,7 @@ module.exports = {
 			{ name: 'Przedmiot:', value: `${data.lekcja}`, inline: true },
 		);
 		
-		await interaction.reply({ embeds: [embed], ephemeral: visibility });	
+		await interaction.reply({ embeds: [embed] });	
 
     },
 }

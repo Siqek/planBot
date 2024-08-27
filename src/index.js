@@ -33,38 +33,39 @@ client.once(Events.ClientReady, readyClient => {
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-	const command = interaction.client.commands.get(interaction.commandName);
+	// if (interaction.isCommand()) {
+		const command = interaction.client.commands.get(interaction.commandName);
 
-	if (!command) {
-		console.error(`Nie znaleziono odpowiadającej komendy: ${interaction.commandName}.`);
-		return;
-	}
-	
-	if (!interaction.isChatInputCommand()) 
-	{
-		if (interaction.isAutocomplete())
+		if (!command && interaction.isCommand()) {
+			console.error(`Nie znaleziono odpowiadającej komendy: ${interaction.commandName}.`);
+			return;
+		}
+		
+		if (!interaction.isChatInputCommand()) 
 		{
-			try {
-				await command.autocomplete(interaction);
-			} catch (err) {
-				console.log(err)
-				return;
+			if (interaction.isAutocomplete())
+			{
+				try {
+					await command.autocomplete(interaction);
+				} catch (err) {
+					console.log(err)
+					return;
+				}
 			}
+
+			return;
 		}
 
-		return;
-	}
-
-	try {
-		await command.execute(interaction, time);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ embeds: [Embeds.error], ephemeral: true });
-		} else {
-			await interaction.reply({ embeds: [Embeds.error], ephemeral: true });
-		}
-	}
+		try {
+			await command.execute(interaction, time);
+		} catch (error) {
+			console.error(error);
+			if (interaction.replied || interaction.deferred) {
+				await interaction.followUp({ embeds: [Embeds.error], ephemeral: true });
+			} else {
+				await interaction.reply({ embeds: [Embeds.error], ephemeral: true });
+			}
+		};
 });
 
 client.login(process.env.token);

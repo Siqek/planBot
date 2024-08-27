@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
+const pagination = require('../command-functions/pagination');
+
 const tools = require('../tools/functions');
 const { embedColors, createEmbed, embedFields } = require('../embeds/EmbedCreator');
 const Embeds = require('../embeds/Embeds');
@@ -11,46 +13,46 @@ const Time          = require('../tools/Time');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('klasa')
-		.setDescription('x')
+		.setDescription('Wyświetla dane lekcji, w której uczestniczy wskazana klasa.')
       	.addStringOption(option =>
          	option.setName('klasa')
-            	.setDescription('x')
+            	.setDescription('Oznaczenie klasy')
             	.setRequired(true)
 		)
 		.addNumberOption(option =>
 			option.setName('godzina')
-				.setDescription('x')
+				.setDescription('Numer lekcji')
 				.addChoices(
 					...timeTable.map(lesson =>({ 'name': lesson.name, 'value': lesson.value }))
 				)
 		)
 		.addNumberOption(option =>
 			option.setName('dzien')
-				.setDescription('x')
+				.setDescription('Dzień tygodnia')
 				.addChoices(
 					...days
 				)
-		)
-		.addStringOption(option =>
-			option.setName('widocznosc')
-				.setDescription('x')
-				.addChoices(
-					{
-						name: "wszyscy",
-						value: "false"
-					},
-					{
-						name: "tylko ty",
-						value: "true"
-					}
-				)
+		// )
+		// .addStringOption(option =>
+		// 	option.setName('widocznosc')
+		// 		.setDescription('Kto może zobaczyć wiadomość')
+		// 		.addChoices(
+		// 			{
+		// 				name: "wszyscy",
+		// 				value: "false"
+		// 			},
+		// 			{
+		// 				name: "tylko ty",
+		// 				value: "true"
+		// 			}
+		// 		)
 		),
     async execute (interaction, time)
     {
 		const klasa         = interaction.options.getString('klasa').toUpperCase(); //cannot be null
 		const godzina       = interaction.options.getNumber('godzina') ?? time.getLessonNumber();
 		const dzien         = interaction.options.getNumber('dzien')   ?? time.day();
-		const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
+		//const visibility    = (interaction.options.getString('widocznosc') ?? "true") == "true"; // converts a string into a boolean value
 
 		if (
 			godzina < 0   // there are no more lessons
@@ -108,10 +110,6 @@ module.exports = {
 			embeds.push(embed);
 		});
 
-		await interaction.reply({ embeds: embeds, ephemeral: visibility });
-
-		// TODO (siqek)
-		//
-		// kilka embedow => pagination system 
-    },
+		await pagination(interaction, embeds);
+	},
 }
