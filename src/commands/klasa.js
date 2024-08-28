@@ -91,8 +91,9 @@ module.exports = {
 		}
 
 		let embeds = [];
+		let groups = [];
 
-		res.forEach(data =>
+		res.forEach((data, index) =>
 		{
 			const embed = createEmbed(embedColors.message)
 			.setTitle(days[dzien - 1].name)
@@ -108,7 +109,20 @@ module.exports = {
 			);
 
 			embeds.push(embed);
+
+			groups.push({ name: `${index + 1}. ${data.nauczyciel}`, value: `${data.klasa.join(', ')}`, inline: false });
+
 		});
+
+		if (embeds.length > 1)
+		{
+			embeds.unshift(
+				createEmbed(embedColors.message)
+				.setTitle(days[dzien - 1].name)
+				.setDescription(`${Time.formatLessonTime(godzina - 1)}\n### Grupy: `)
+				.addFields(...groups)
+			);
+		}
 
 		await pagination(interaction, embeds);
 	},
