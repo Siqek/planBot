@@ -7,3 +7,4 @@ services:
       - token=${token}
       - clientId=${clientId}
       - url=${url}
+    restart: always
